@@ -31,7 +31,7 @@ export function CreateTask({ onSave, taskToEdit }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-2 mb-10">
       <input
         type="text"
         value={title}
