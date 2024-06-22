@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import { CreateTask } from "./components/create-task";
 import { ITask } from "./types";
 import { TaskList } from "./components/task-list";
-import { CreateTask } from "./components/create-task";
+import { useEffect, useState } from "react";
 
-const App: React.FC = () => {
+export default function App() {
   const [activeTasks, setActiveTasks] = useState<ITask[]>([]);
   const [completedTasks, setCompletedTasks] = useState<ITask[]>([]);
   const [taskToEdit, setTaskToEdit] = useState<ITask | null>(null);
+
+  useEffect(() => {
+    const storedActiveTasks = localStorage.getItem("activeTasks");
+    const storedCompletedTasks = localStorage.getItem("completedTasks");
+    if (storedActiveTasks) {
+      setActiveTasks(JSON.parse(storedActiveTasks));
+    }
+
+    if (storedCompletedTasks) {
+      setCompletedTasks(JSON.parse(storedCompletedTasks));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("activeTasks", JSON.stringify(activeTasks));
+    localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
+  }, [activeTasks, completedTasks]);
 
   const handleSaveTask = (task: ITask) => {
     if (taskToEdit) {
@@ -61,7 +78,9 @@ const App: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Todo App</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        Web3Bridge Task Management App
+      </h1>
       <CreateTask
         onSave={handleSaveTask}
         taskToEdit={taskToEdit || undefined}
@@ -81,6 +100,4 @@ const App: React.FC = () => {
       />
     </div>
   );
-};
-
-export default App;
+}
